@@ -34,12 +34,13 @@ const getDataFromLocalStorage = () => {
     return []
 }
 
-console.log(`1- localstorage : ${localStorage.getItem("visits")}`)
+console.log(`1- VisitList localstorage : ${localStorage.getItem("visits")}`)
 
 export const VisitList = () => {
+  console.log(`2- VL localstorage : ${localStorage.getItem("visits")}`)
   // const { visits } = useVisit()
-  const [visits, setVisits] = useState<Visit[]>(getDataFromLocalStorage())
-  console.log(`visitList rerendering ${visits}`)
+  const [visits] = useState<Visit[]>(getDataFromLocalStorage())
+  console.log(`visitList date ${visits}`)
 
   if (!visits.length) {
     return(
@@ -56,57 +57,39 @@ export const VisitList = () => {
   }
 
   return (
-    <motion.ul className="grid max-w-xl gap-2 px-5 m-auto">
-      {visits.map(visit => (
-        <motion.li
-        layout
-        key={visit.id}
-        className={cn(
-          'w-full max-w-lg p-5 rounded-xl bg-zinc-900'
-        )}
-      >
-        
-        <div className="flex flex-col gap-5">
-          <motion.div
-            className="flex justify-between gap-5"
-            layout
-            style={{
-              //textDecoration: visit.reason === 'finished' ? 'line-through' : 'none'
-            }}
-          >
-            <div className='text-base font-bold'>{visit.purpose}</div>
-            <div className='italic'>{visit.purpose}</div>
-            {/* {visit.arrivalDate.toLocaleDateString()} */}
-            
-          </motion.div>
-          <div
-            className='flex justify-between gap-5 text-white'
-          >
-            <p className='flex items-center gap-1'>
-              Approval Pending
-            </p>
-            
-            <p className='flex items-center gap-1'>
-              Approved
-            </p>
-  
-            <div className='flex items-center gap-2'>
-              <p
-                className='flex items-center gap-2'
-              >
-                {/* {visit.arrivalDate.toLocaleDateString()} */}
-              </p>
-  
-              <p
-                className='flex items-center gap-1 text-red-500'
-              >
-                {/* {visit.departureDate.toLocaleDateString()} */}
-              </p>
-            </div>
-          </div>
-        </div>
-      </motion.li>
-      ))}
-    </motion.ul>
+    <motion.div className="grid gap-2 px-5 m-auto">
+      <table>
+        <thead className={cn('w-full p-5')}>
+          <tr>
+            <th>First Name </th>
+            <th>Last Name</th>
+            <th>Country</th>
+            <th>Visit Purpose</th>
+            <th>Begining Date time</th>
+            <th>Ending Date time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {visits.map((visit) => (
+            <motion.tr
+              layout
+              key={visit.id}
+              className={cn(
+                'w-full items-center px-15 rounded-xl bg-zinc-900'
+              )}
+            >
+              
+                <td className='text-center'>{visit.visitor.firstName}</td>
+                <td className='text-center'>{visit.visitor.lastName}</td>
+                <td className='text-center'>{visit.visitor.adress.country}</td>
+                <td className='text-center'>{visit.purpose}</td>
+                <td className='text-center'>{visit.arrivalDate.toString().split('T')[0]}</td>
+                <td className='text-center'>{visit.departureDate.toString().split('T')[0]}</td>
+              
+            </motion.tr>
+          ))}
+        </tbody>
+      </table>     
+    </motion.div>
   )
 }

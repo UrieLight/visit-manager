@@ -3,6 +3,7 @@ import { nanoid } from 'nanoid'
 import { toast } from 'react-hot-toast'
 // import { useVisit } from '../context'
 import { Input } from './Input'
+import { useLocalStorage } from 'usehooks-ts'
 
 interface Visitor {
   firstName: string,
@@ -24,10 +25,17 @@ interface Visit {
   visitor: Visitor
 }
 
-console.log(`1- localstorage : ${localStorage.getItem("visits")}`)
+console.log(`1- VisitRegister localstorage : ${localStorage.getItem("visits")}`)
+const getDataFromLocalStorage = () => {
+  const storedVisits = localStorage.getItem('visits');
+  if(storedVisits)
+    return JSON.parse(storedVisits)
+  else
+    return []
+}
 
 export const VisitRegister = () => {
-  console.log(`2- localstorage : ${localStorage.getItem("visits")}`)
+  console.log(`2- VR localstorage : ${localStorage.getItem("visits")}`)
 
   const [visitor, setVisitor] = useState<Visitor>({
     firstName: '',
@@ -49,7 +57,8 @@ export const VisitRegister = () => {
     visitor: visitor
   })
 
-  const [visits, setVisits] = useState<Visit[]>([])
+  const [visits, setVisits] = useState<Visit[]>(getDataFromLocalStorage)
+  //const [visitLocalstorage, setVisitLocalstorage] = useLocalStorage('visits_list', '')
 
   // :: INPUTs REFs ::
     const firstNameInputRef = useRef<HTMLInputElement>(null)
@@ -62,8 +71,7 @@ export const VisitRegister = () => {
     const arrivalDateInputRef = useRef<HTMLInputElement>(null)
     const departureDateInputRef = useRef<HTMLInputElement>(null)
     
-  // const { addVisit } = useVisit()
-
+  // Set Focus on FirstName input field at loadind page
   useEffect(() => {
     if(firstNameInputRef.current){
       firstNameInputRef.current.focus()
@@ -94,9 +102,12 @@ export const VisitRegister = () => {
 
   const handleSubmission = (e: React.FormEvent) => {
     e.preventDefault()
-    if(visit){
+
+    //if(visit){
       
       setVisits([...visits, visit])
+      //setVisitLocalstorage(visitLocalstorage)
+      //localStorage.setItem("visits", JSON.stringify(visits))
 
       setVisitor({
         firstName: '',
@@ -117,14 +128,15 @@ export const VisitRegister = () => {
         status: 'Pending',
         visitor: visitor
       })
+
       toast.success('Visit added successfully!')
-    }else
-      toast.error('Visitor nor Visit information cannot be empty!')
+    // }else
+    //   toast.error('Visitor nor Visit information cannot be empty!')
   }
 
   
   useEffect(() => {
-      localStorage.setItem("visits", JSON.stringify(visits))
+    localStorage.setItem("visits", JSON.stringify(visits))
   }, [visits])
 
   return (
@@ -226,7 +238,7 @@ export const VisitRegister = () => {
         <div className='flex items-start justify-between gap-2
                       pb-3 m-auto'>
           <label>Arrival Date
-          <Input required name="arrivalDate" step="any" ref={arrivalDateInputRef} type="datetime-local" value={visit.arrivalDate.toISOString().slice(0, -1)} placeholder='Arrival date'
+          <Input required name="arrivalDate" ref={arrivalDateInputRef} type="date" value={visit.arrivalDate.toISOString().split('T')[0]} placeholder='Arrival date'
             onChange={handleVisitDateChange}
             className='w-full
               px-5 py-2
@@ -237,7 +249,7 @@ export const VisitRegister = () => {
           /></label>
 
           <label>Departure Date
-          <Input required name="departureDate" ref={departureDateInputRef} type="datetime-local" value={visit.departureDate.toISOString().slice(0, -1)} placeholder='Departure date'
+          <Input required name="departureDate" ref={departureDateInputRef} type="date" value={visit.departureDate.toISOString().split('T')[0]} placeholder='Departure date'
             onChange={handleVisitDateChange}
             className='w-full
               px-5 py-2
