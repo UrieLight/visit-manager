@@ -3,7 +3,6 @@ import { nanoid } from 'nanoid'
 import { toast } from 'react-hot-toast'
 // import { useVisit } from '../context'
 import { Input } from './Input'
-import { useLocalStorage } from 'usehooks-ts'
 
 interface Visitor {
   firstName: string,
@@ -25,7 +24,7 @@ interface Visit {
   visitor: Visitor
 }
 
-console.log(`1- VisitRegister localstorage : ${localStorage.getItem("visits")}`)
+// :: Saving localstorage from unexpected clearing
 const getDataFromLocalStorage = () => {
   const storedVisits = localStorage.getItem('visits');
   if(storedVisits)
@@ -35,7 +34,6 @@ const getDataFromLocalStorage = () => {
 }
 
 export const VisitRegister = () => {
-  console.log(`2- VR localstorage : ${localStorage.getItem("visits")}`)
 
   const [visitor, setVisitor] = useState<Visitor>({
     firstName: '',
@@ -58,7 +56,6 @@ export const VisitRegister = () => {
   })
 
   const [visits, setVisits] = useState<Visit[]>(getDataFromLocalStorage)
-  //const [visitLocalstorage, setVisitLocalstorage] = useLocalStorage('visits_list', '')
 
   // :: INPUTs REFs ::
     const firstNameInputRef = useRef<HTMLInputElement>(null)
@@ -102,36 +99,30 @@ export const VisitRegister = () => {
 
   const handleSubmission = (e: React.FormEvent) => {
     e.preventDefault()
+    
+    setVisits([...visits, visit])
 
-    //if(visit){
-      
-      setVisits([...visits, visit])
-      //setVisitLocalstorage(visitLocalstorage)
-      //localStorage.setItem("visits", JSON.stringify(visits))
+    setVisitor({
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: 6,
+      adress: {
+        country: '',
+        town: ''
+      }
+    })
 
-      setVisitor({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: 6,
-        adress: {
-          country: '',
-          town: ''
-        }
-      })
+    setVisit({
+      id: nanoid(),
+      purpose: '',
+      arrivalDate: new Date(),
+      departureDate: new Date(),
+      status: 'Pending',
+      visitor: visitor
+    })
 
-      setVisit({
-        id: nanoid(),
-        purpose: '',
-        arrivalDate: new Date(),
-        departureDate: new Date(),
-        status: 'Pending',
-        visitor: visitor
-      })
-
-      toast.success('Visit added successfully!')
-    // }else
-    //   toast.error('Visitor nor Visit information cannot be empty!')
+    toast.success('Visit added successfully!')
   }
 
   

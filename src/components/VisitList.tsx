@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react'
-// import { VisitEntries } from './VisitEntries'
+import { useState } from 'react'
 // import { useVisit } from '../context'
 import { SiStarship } from 'react-icons/si'
 import { motion } from 'framer-motion'
@@ -34,10 +33,8 @@ const getDataFromLocalStorage = () => {
     return []
 }
 
-console.log(`1- VisitList localstorage : ${localStorage.getItem("visits")}`)
 
 export const VisitList = () => {
-  console.log(`2- VL localstorage : ${localStorage.getItem("visits")}`)
   // const { visits } = useVisit()
   const [visits] = useState<Visit[]>(getDataFromLocalStorage())
   console.log(`visitList date ${visits}`)
@@ -77,15 +74,13 @@ export const VisitList = () => {
               className={cn(
                 'w-full items-center px-15 rounded-xl bg-zinc-900'
               )}
-            >
-              
-                <td className='text-center'>{visit.visitor.firstName}</td>
-                <td className='text-center'>{visit.visitor.lastName}</td>
-                <td className='text-center'>{visit.visitor.adress.country}</td>
-                <td className='text-center'>{visit.purpose}</td>
-                <td className='text-center'>{visit.arrivalDate.toString().split('T')[0]}</td>
-                <td className='text-center'>{visit.departureDate.toString().split('T')[0]}</td>
-              
+            >  
+              <td className='text-center'>{visit.visitor.firstName}</td>
+              <td className='text-center'>{visit.visitor.lastName}</td>
+              <td className='text-center'>{visit.visitor.adress.country}</td>
+              <td className='text-center'>{visit.purpose}</td>
+              <td className='text-center'>{visit.arrivalDate.toString().split('T')[0]}</td>
+              <td className='text-center'>{visit.departureDate.toString().split('T')[0]}</td>
             </motion.tr>
           ))}
         </tbody>
